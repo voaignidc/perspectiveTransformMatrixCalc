@@ -1,17 +1,62 @@
-<html>  
+<html> 
 <head>  
 <meta http-equiv="content-Type" content="text/html; charset=utf-8">
-<title>test</title>
+<title>逆透视变换</title>
+<link rel="stylesheet" type="text/css" href="../static/default.css">
 </head>
+
 <body>
+<header>
+<h1>逆透视变换</h1>
+</header>
 
-<h1>你好</h1>
+<nav>
+<a href="base.html">运行逆透</a>
+<br/>
+<a href="tutorial.html">教程</a>
+<br/>
+</nav>
 
-<p>my first p</p>
+<section>
+上传原图像:
+<br/>
+<input type="file" name = "file" id = "fileId" />     
+<button  type = "submit" name = "btn" value = "提交" id = "btnId" onclick="check()" />提交</button>
+</br>
 
-<textarea name="message" rows="10" cols="100">
-The cat was playing in the garden.
-</textarea>
+<script>
+function check() {
+
+	var objFile = document.getElementById("fileId");
+	if(objFile.value == "") {
+		alert("不能空")
+	}
+
+	console.log(objFile.files[0].size); // 文件字节数
+	
+	var files = $('#fileId').prop('files');//获取到文件列表
+	if(files.length == 0){
+		alert('请选择文件');
+	}
+
+	else{
+		var reader = new FileReader();//新建一个FileReader
+		reader.readAsText(files[0], "UTF-8");//读取文件 
+		reader.onload = function(evt){ //读取完文件之后会回来这里
+			var fileString = evt.target.result; // 读取文件内容
+		}
+	}
+}
+</script>
+
+<canvas id="srcImage" width="260" height="130" style="border:1px solid #c3c3c3;">
+你的浏览器不支持canvas,请换用firefox或chrome.
+</canvas>
+</section>
+
+<footer>
+作者: 墨羽VGC
+</footer>
 
 </body>
 </html>
