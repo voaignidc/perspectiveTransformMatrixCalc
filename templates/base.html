@@ -3,6 +3,43 @@
 <meta http-equiv="content-Type" content="text/html; charset=utf-8">
 <title>逆透视变换</title>
 <link rel="stylesheet" type="text/css" href="../static/default.css">
+
+<script type="text/javascript">
+function inputFileButtonChecked()
+{
+  //大括号不换行,我浑身难受!
+  var fileInput = document.getElementById("inputFileId").files[0];
+  var reader = new FileReader(); 
+  reader.readAsDataURL(fileInput);//将文件以Data URL形式读入页面  
+
+  reader.onload=function()
+  { 
+    var c = document.getElementById("srcImageCanvas"); 
+    var cxt = c.getContext("2d");
+    var img = new Image();
+    
+    img.onload = function()
+    {
+      cxt.drawImage(img,0,0);
+    }
+    img.src = reader.result;
+  }   
+  //3.0 将图片保存到本地
+  /*
+  var savaFile=function(data,filename)
+  {
+      var save_link=document.createElement('a');
+      save_link.href=data;
+      save_link.download=filename;
+      save_link.click();
+  }
+  
+  savaFile(reader,"aaa.bmp");
+  alert('ok');
+  */ 
+}
+</script>
+
 </head>
 
 <body>
@@ -20,39 +57,18 @@
 <section>
 上传原图像:
 <br/>
-<input type="file" name = "file" id = "fileId" />     
-<button  type = "submit" name = "btn" value = "提交" id = "btnId" onclick="check()" />提交</button>
+<input type="file" name = "inputFile" id = "inputFileId" accept="image/*" />     
+<button  type = "submit" name = "inputFileButton" value = "提交" id = "inputFileButtonId" onclick="inputFileButtonChecked()" />提交</button>
 </br>
 
-<script>
-function check() {
 
-	var objFile = document.getElementById("fileId");
-	if(objFile.value == "") {
-		alert("不能空")
-	}
 
-	console.log(objFile.files[0].size); // 文件字节数
-	
-	var files = $('#fileId').prop('files');//获取到文件列表
-	if(files.length == 0){
-		alert('请选择文件');
-	}
-
-	else{
-		var reader = new FileReader();//新建一个FileReader
-		reader.readAsText(files[0], "UTF-8");//读取文件 
-		reader.onload = function(evt){ //读取完文件之后会回来这里
-			var fileString = evt.target.result; // 读取文件内容
-		}
-	}
-}
-</script>
-
-<canvas id="srcImage" width="260" height="130" style="border:1px solid #c3c3c3;">
+<canvas id="srcImageCanvas" width="260" height="130" style="border:1px solid #c3c3c3;">
 你的浏览器不支持canvas,请换用firefox或chrome.
 </canvas>
 </section>
+
+<div id="result" name="result"></div>  
 
 <footer>
 作者: 墨羽VGC
