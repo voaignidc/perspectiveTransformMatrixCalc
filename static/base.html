@@ -1,0 +1,52 @@
+<html> 
+<head>  
+<meta http-equiv="content-Type" content="text/html; charset=utf-8">
+<title>逆透视变换</title>
+<link rel="stylesheet" type="text/css" href="default.css">
+<script type="text/javascript" src="../js/cnvs.js"></script>
+</head>
+
+<body>
+<header>
+<h1>逆透视变换</h1>
+</header>
+
+<nav>
+<a href="base.html">运行逆透</a>
+<br/>
+<a href="tutorial.html">教程</a>
+<br/>
+</nav>
+
+<section>
+上传原图像:
+<br/>
+<input type="file" name = "inputFile" id = "inputFileId" accept="image/*" />     
+<button  type = "submit" name = "inputFileButton" value = "提交" id = "inputFileButtonId" onclick="inputFileButtonChecked()" />提交</button>
+</br>
+<canvas id="srcImageCanvas" width="260" height="130">
+你的浏览器不支持canvas,请换用firefox或chrome.
+</canvas>
+
+</br>
+目标图像:
+</br>
+<canvas id="dstImageCanvas" width="260" height="130">
+你的浏览器不支持canvas,请换用firefox或chrome.
+</canvas>
+
+
+</br>
+目标图像结果:
+</br>
+<canvas id="rstImageCanvas" width="260" height="130" >
+你的浏览器不支持canvas,请换用firefox或chrome.
+</canvas>
+</section>
+
+<footer>
+作者: 墨羽VGC
+</footer>
+
+</body>
+</html>
