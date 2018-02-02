@@ -27,7 +27,6 @@ def index():
 
     return render_template('index.html', uploadForm=uploadForm, doPerspectForm=doPerspectForm)
 
-
 @main.route('/upload', methods=['POST'])
 def upload():
     uploadForm = UploadForm()
@@ -45,6 +44,7 @@ def upload():
     return render_template('index.html', uploadForm=uploadForm,
                            doPerspectForm=doPerspectForm, fileUrl=repr(session.get('fileUrl')))
 
+
 @main.route('/doPerspect', methods=['GET', 'POST'])
 def doPerspect():
     uploadForm = UploadForm()
@@ -54,7 +54,6 @@ def doPerspect():
         print('run perspect')
     return render_template('index.html', uploadForm=uploadForm,
                            doPerspectForm=doPerspectForm, fileUrl=repr(session.get('fileUrl')))
-
 
 @main.route('/tutorial')
 def tutorial():

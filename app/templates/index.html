@@ -21,9 +21,6 @@
 <section>
 上传原图像:
 <br/>
-<! input type="file" name = "inputFile" id = "inputFileId" accept="image/*" />     
-<! button  type = "submit" name = "inputFileButton" value = "提交" id = "inputFileButtonId" onclick="inputFileButtonChecked()" />提交<!/button>
-
 <form action="{{ url_for('main.upload') }}" method="POST" enctype="multipart/form-data">
      {{ uploadForm.hidden_tag() }}
      {{ uploadForm.photo }}
@@ -37,27 +34,14 @@
 你的浏览器不支持canvas,请换用firefox或chrome.
 </canvas>
 
-{% if fileUrl %}
-<script>
-var c = document.getElementById("srcImageCanvas"); 
-var cxt = c.getContext("2d");
-var img = new Image();
-
-img.onload = function()
-{
-  cxt.drawImage(img,0,0);
-};
-img.src = {{ fileUrl|safe }}; 
-</script>
-{% endif %}
-
-</br>
+<hr/>
 目标图像:
-</br>
+<br/>
 <canvas id="dstImageCanvas" width="260" height="130">
 你的浏览器不支持canvas,请换用firefox或chrome.
 </canvas>
 
+<hr/>
 
 <form action="{{ url_for('main.doPerspect') }}" method="POST">
      目标图像结果:
@@ -68,6 +52,29 @@ img.src = {{ fileUrl|safe }};
 你的浏览器不支持canvas,请换用firefox或chrome.
 </canvas>
 </section>
+
+{% if fileUrl %}
+<script>
+var srcImageC = document.getElementById("srcImageCanvas");
+var dstImageC = document.getElementById("dstImageCanvas");
+var rstImageC = document.getElementById("rstImageCanvas");
+var srcImageCxt = srcImageC.getContext("2d");
+var srcImg = new Image();
+
+srcImg.onload = function()
+{
+    srcImageC.setAttribute("width", srcImg.naturalWidth);
+    srcImageC.setAttribute("height", srcImg.naturalHeight);
+    dstImageC.setAttribute("width", srcImg.naturalWidth);
+    dstImageC.setAttribute("height", srcImg.naturalHeight);
+    rstImageC.setAttribute("width", srcImg.naturalWidth);
+    rstImageC.setAttribute("height", srcImg.naturalHeight);
+    srcImageCxt.drawImage(srcImg,0,0);
+};
+srcImg.src = {{ fileUrl|safe }};
+</script>
+{% endif %}
+
 
 <footer>
 墨羽VGC
