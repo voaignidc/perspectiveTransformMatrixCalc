@@ -15,19 +15,46 @@ class UploadForm(FlaskForm):
     photo = FileField(validators=[
         FileAllowed(photos, u'只能上传图片！'), 
         FileRequired(u'文件未选择！')])
-    submit = SubmitField(u'上传')    
-      
+    submit = SubmitField(u'上传')
+
+class DoPerspectForm(FlaskForm):
+    submit = SubmitField(u'运行透视变换')
+
 @main.route('/', methods=['GET', 'POST'])
-def base():
-    form = UploadForm()
-    if form.validate_on_submit():
-        extName = getExtName(form.photo.data.filename)
-        form.photo.data.filename = 'src_userInput' + extName
-        fileName = photos.save(form.photo.data)
+def index():
+    uploadForm = UploadForm()
+    doPerspectForm = DoPerspectForm()
+
+    return render_template('index.html', uploadForm=uploadForm, doPerspectForm=doPerspectForm)
+
+
+@main.route('/upload', methods=['POST'])
+def upload():
+    uploadForm = UploadForm()
+    doPerspectForm = DoPerspectForm()
+
+    if uploadForm.validate_on_submit():
+        # extName = getExtName(uploadForm.photo.data.filename)
+        # uploadForm.photo.data.filename = 'src_userInput' + extName
+        fileName = photos.save(uploadForm.photo.data)
         fileUrl = photos.url(fileName)
+        session['fileUrl'] = fileUrl
     else:
         fileUrl = None
-    return render_template('base.html', form=form, fileUrl=repr(fileUrl))
+
+    return render_template('index.html', uploadForm=uploadForm,
+                           doPerspectForm=doPerspectForm, fileUrl=repr(session.get('fileUrl')))
+
+@main.route('/doPerspect', methods=['GET', 'POST'])
+def doPerspect():
+    uploadForm = UploadForm()
+    doPerspectForm = DoPerspectForm()
+
+    if doPerspectForm.validate_on_submit():
+        print('run perspect')
+    return render_template('index.html', uploadForm=uploadForm,
+                           doPerspectForm=doPerspectForm, fileUrl=repr(session.get('fileUrl')))
+
 
 @main.route('/tutorial')
 def tutorial():

@@ -16,6 +16,3 @@ def createApp(config):
     app.register_blueprint(main_blueprint)
     
     return app
-    
-    
-    

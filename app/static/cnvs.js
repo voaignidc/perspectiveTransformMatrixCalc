@@ -18,10 +18,10 @@ function savaFile(data, filename)
 
 function inputFileButtonChecked()
 {
-  //大括号不换行,我浑身难受!
+
   var fileInput = document.getElementById("inputFileId").files[0];
   var reader = new FileReader(); 
-  reader.readAsDataURL(fileInput);//将文件以Data URL形式读入页面  
+  reader.readAsDataURL(fileInput);//灏嗘枃浠朵互Data URL褰㈠紡璇诲叆椤甸潰
 
   reader.onload = function()
   { 
@@ -34,6 +34,6 @@ function inputFileButtonChecked()
       cxt.drawImage(img,0,0);
     }
     img.src = reader.result;
-    savaFile(reader.result, "aaa.bmp");//将图片保存到本地
+    savaFile(reader.result, "aaa.bmp");//灏嗗浘鐗囦繚瀛樺埌鏈湴
   }   
 }

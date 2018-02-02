@@ -24,13 +24,13 @@
 <! input type="file" name = "inputFile" id = "inputFileId" accept="image/*" />     
 <! button  type = "submit" name = "inputFileButton" value = "提交" id = "inputFileButtonId" onclick="inputFileButtonChecked()" />提交<!/button>
 
-<form method="POST" enctype="multipart/form-data">
-     {{ form.hidden_tag() }}
-     {{ form.photo }}
-     {% for error in form.photo.errors %}
+<form action="{{ url_for('main.upload') }}" method="POST" enctype="multipart/form-data">
+     {{ uploadForm.hidden_tag() }}
+     {{ uploadForm.photo }}
+     {% for error in uploadForm.photo.errors %}
          <span style="color: red;">{{ error }}</span>
      {% endfor %}
-     {{ form.submit }}
+     {{ uploadForm.submit }}
 </form>
 
 <canvas id="srcImageCanvas" width="260" height="130">
@@ -46,7 +46,7 @@ var img = new Image();
 img.onload = function()
 {
   cxt.drawImage(img,0,0);
-}
+};
 img.src = {{ fileUrl|safe }}; 
 </script>
 {% endif %}
@@ -59,9 +59,11 @@ img.src = {{ fileUrl|safe }};
 </canvas>
 
 
-</br>
-目标图像结果:
-</br>
+<form action="{{ url_for('main.doPerspect') }}" method="POST">
+     目标图像结果:
+     {{ doPerspectForm.hidden_tag() }}
+     {{ doPerspectForm.submit }}
+</form>
 <canvas id="rstImageCanvas" width="260" height="130" >
 你的浏览器不支持canvas,请换用firefox或chrome.
 </canvas>
