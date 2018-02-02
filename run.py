@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 import os
 import sys
 import webbrowser
@@ -12,11 +14,12 @@ elif __file__:
 class Config():
     SECRET_KEY = 'hard to guess string'
     ROOT_PATH = rootPath
-    
+
     @staticmethod
     def init_app(app):
         pass
 
+        
 config = Config()
 app = createApp(config)
 
