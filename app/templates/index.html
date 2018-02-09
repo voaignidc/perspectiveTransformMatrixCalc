@@ -3,7 +3,7 @@
 <meta http-equiv="content-Type" content="text/html; charset=utf-8">
 <title>透视变换矩阵计算</title>
 <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='default.css')}}">
-<! script type="text/javascript" src="{{url_for('static', filename='cnvs.js')}}"><! /script>
+<script type="text/javascript" src="{{url_for('static', filename='cnvs.js')}}"></script>
 </head>
 
 <body>
@@ -30,14 +30,16 @@
      {{ uploadForm.submit }}
 </form>
 
-<canvas id="srcImageCanvas" width="260" height="130">
+<canvas id="srcImageCanvas" width="188" height="120" onmousemove="cnvs_getXY(event, this.id, 'srcImageXY')">
 你的浏览器不支持canvas,请换用firefox或chrome.
 </canvas>
+
+<p id="srcImageXY"></p>
 
 <hr/>
 目标图像:
 <br/>
-<canvas id="dstImageCanvas" width="260" height="130">
+<canvas id="dstImageCanvas" width="188" height="120">
 你的浏览器不支持canvas,请换用firefox或chrome.
 </canvas>
 
@@ -48,7 +50,7 @@
      {{ doPerspectForm.hidden_tag() }}
      {{ doPerspectForm.submit }}
 </form>
-<canvas id="rstImageCanvas" width="260" height="130" >
+<canvas id="rstImageCanvas" width="188" height="120">
 你的浏览器不支持canvas,请换用firefox或chrome.
 </canvas>
 </section>

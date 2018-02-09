@@ -19,6 +19,7 @@ class Config():
     def init_app(app):
         pass
 
+
         
 config = Config()
 app = createApp(config)
