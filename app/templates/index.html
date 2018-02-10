@@ -25,13 +25,13 @@
         srcImg.src = {{ fileUrl|safe }};
     }
 
-    function cnvsReload()
+    function cnvsReload(cnvsId)
     {
-        var srcImageC = document.getElementById("srcImageCanvas");
-        var srcImageCxt = srcImageC.getContext("2d");
-        var srcImg = new Image();
-        srcImg.src = {{ fileUrl|safe }};
-        srcImageCxt.drawImage(srcImg,0,0);
+        var imageC = document.getElementById(cnvsId);
+        var imageCxt = imageC.getContext("2d");
+        var img = new Image();
+        img.src = {{ fileUrl|safe }};
+        imageCxt.drawImage(img,0,0);
     }
 </script>
 </head>
@@ -52,21 +52,30 @@
 上传原图像:
 <br/>
 <form action="{{ url_for('main.upload') }}" method="POST" enctype="multipart/form-data">
-     {{ uploadForm.hidden_tag() }}
-     {{ uploadForm.photo }}
-     {% for error in uploadForm.photo.errors %}
-         <span style="color: red;">{{ error }}</span>
-     {% endfor %}
-     {{ uploadForm.submit }}
+    {{ uploadForm.hidden_tag() }}
+    {{ uploadForm.photo }}
+    {% for error in uploadForm.photo.errors %}
+        <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+    {{ uploadForm.submit }}
 </form>
 
 <canvas id="srcImageCanvas" width="188" height="120"
         onmousemove="cnvsMouseMove(event, this.id, 'srcImageXYShow')"
-        onclick="cnvsClick(event, this.id, 'srcImageXY'), cnvsReload(), cnvsDraw(event, this.id)">
+        onclick="cnvsClick(event, this.id, 'srcImageXY'), cnvsReload(this.id), cnvsDraw(event, this.id)">
 你的浏览器不支持canvas,请换用firefox或chrome.
 </canvas>
 
 <p id="srcImageXYShow"></p>
+
+<span>当前选中第</span>
+<select name="srcImgCoordIndex">
+    <option>0</option>
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+</select>
+<span>个坐标</span>
 
 <hr/>
 目标图像:
@@ -90,11 +99,20 @@
 {% endif %}
 
 <form action="{{ url_for('main.doPerspect') }}" method="POST">
-
-     {{ doPerspectForm.coord.label }}
-     {{ doPerspectForm.coord(id='srcImageXY') }}
-     {{ doPerspectForm.hidden_tag() }}
-     {{ doPerspectForm.submit }}
+    {{ doPerspectForm.hidden_tag() }}
+    {{ doPerspectForm.srcImgCoord.label }}
+    {{ doPerspectForm.srcImgCoord(id='srcImageXY') }}
+    {% for error in doPerspectForm.srcImgCoord.errors %}
+        <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+    <br/>
+    {{ doPerspectForm.dstImgCoord.label }}
+    {{ doPerspectForm.dstImgCoord(id='dstImageXY') }}
+    {% for error in doPerspectForm.dstImgCoord.errors %}
+        <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+    <br/>
+    {{ doPerspectForm.submit }}
 </form>
 
 

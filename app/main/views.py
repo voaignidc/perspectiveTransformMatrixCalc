@@ -19,7 +19,8 @@ class UploadForm(FlaskForm):
     submit = SubmitField(u'上传')
 
 class DoPerspectForm(FlaskForm):
-    coord = StringField(u'坐标:')
+    srcImgCoord = StringField(u'选定的原图像坐标:',validators=[DataRequired(message=u"坐标不能为空")])
+    dstImgCoord = StringField(u'选定的目标图像坐标:',validators=[DataRequired(message=u"坐标不能为空")])
     submit = SubmitField(u'运行透视变换')
 
 @main.route('/', methods=['GET', 'POST'])
@@ -54,7 +55,7 @@ def doPerspect():
 
     if doPerspectForm.validate_on_submit():
         print('run perspect')
-        print(doPerspectForm.coord.data)
+        print(doPerspectForm.srcImgCoord.data)
     return render_template('index.html', uploadForm=uploadForm,
                            doPerspectForm=doPerspectForm, fileUrl=repr(session.get('fileUrl')))
 
