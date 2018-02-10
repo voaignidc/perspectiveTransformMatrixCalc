@@ -19,7 +19,7 @@ class UploadForm(FlaskForm):
     submit = SubmitField(u'上传')
 
 class DoPerspectForm(FlaskForm):
-    name = StringField(u'坐标:')
+    coord = StringField(u'坐标:')
     submit = SubmitField(u'运行透视变换')
 
 @main.route('/', methods=['GET', 'POST'])
@@ -54,7 +54,7 @@ def doPerspect():
 
     if doPerspectForm.validate_on_submit():
         print('run perspect')
-        print(doPerspectForm.name)
+        print(doPerspectForm.coord.data)
     return render_template('index.html', uploadForm=uploadForm,
                            doPerspectForm=doPerspectForm, fileUrl=repr(session.get('fileUrl')))
 

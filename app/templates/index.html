@@ -4,6 +4,36 @@
 <title>透视变换矩阵计算</title>
 <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='default.css')}}">
 <script type="text/javascript" src="{{url_for('static', filename='cnvs.js')}}"></script>
+<script>
+    function cnvsLoad()
+    {
+        var srcImageC = document.getElementById("srcImageCanvas");
+        var dstImageC = document.getElementById("dstImageCanvas");
+        var rstImageC = document.getElementById("rstImageCanvas");
+        var srcImageCxt = srcImageC.getContext("2d");
+        var srcImg = new Image();
+        srcImg.onload = function()
+        {
+            srcImageC.setAttribute("width", srcImg.naturalWidth);
+            srcImageC.setAttribute("height", srcImg.naturalHeight);
+            dstImageC.setAttribute("width", srcImg.naturalWidth);
+            dstImageC.setAttribute("height", srcImg.naturalHeight);
+            rstImageC.setAttribute("width", srcImg.naturalWidth);
+            rstImageC.setAttribute("height", srcImg.naturalHeight);
+            srcImageCxt.drawImage(srcImg,0,0);
+        };
+        srcImg.src = {{ fileUrl|safe }};
+    }
+
+    function cnvsReload()
+    {
+        var srcImageC = document.getElementById("srcImageCanvas");
+        var srcImageCxt = srcImageC.getContext("2d");
+        var srcImg = new Image();
+        srcImg.src = {{ fileUrl|safe }};
+        srcImageCxt.drawImage(srcImg,0,0);
+    }
+</script>
 </head>
 
 <body>
@@ -30,16 +60,13 @@
      {{ uploadForm.submit }}
 </form>
 
-<canvas id="srcImageCanvas" width="188" height="120" onmousemove="cnvs_getXY(event, this.id, 'srcImageXY')">
+<canvas id="srcImageCanvas" width="188" height="120"
+        onmousemove="cnvsMouseMove(event, this.id, 'srcImageXYShow')"
+        onclick="cnvsClick(event, this.id, 'srcImageXY'), cnvsReload(), cnvsDraw(event, this.id)">
 你的浏览器不支持canvas,请换用firefox或chrome.
 </canvas>
 
-<!p style="float:right" id="srcImageXY"><!/p>
-
-<form action="{{ url_for('main.doPerspect') }}" method="POST">
-    {{ doPerspectForm.name.label }}
-    {{ doPerspectForm.name(id='srcImageXY') }}
-</form>
+<p id="srcImageXYShow"></p>
 
 <hr/>
 目标图像:
@@ -49,12 +76,8 @@
 </canvas>
 
 <hr/>
-
-<form action="{{ url_for('main.doPerspect') }}" method="POST">
-     目标图像结果:
-     {{ doPerspectForm.hidden_tag() }}
-     {{ doPerspectForm.submit }}
-</form>
+目标图像结果:
+<br/>
 <canvas id="rstImageCanvas" width="188" height="120">
 你的浏览器不支持canvas,请换用firefox或chrome.
 </canvas>
@@ -62,25 +85,17 @@
 
 {% if fileUrl %}
 <script>
-var srcImageC = document.getElementById("srcImageCanvas");
-var dstImageC = document.getElementById("dstImageCanvas");
-var rstImageC = document.getElementById("rstImageCanvas");
-var srcImageCxt = srcImageC.getContext("2d");
-var srcImg = new Image();
-
-srcImg.onload = function()
-{
-    srcImageC.setAttribute("width", srcImg.naturalWidth);
-    srcImageC.setAttribute("height", srcImg.naturalHeight);
-    dstImageC.setAttribute("width", srcImg.naturalWidth);
-    dstImageC.setAttribute("height", srcImg.naturalHeight);
-    rstImageC.setAttribute("width", srcImg.naturalWidth);
-    rstImageC.setAttribute("height", srcImg.naturalHeight);
-    srcImageCxt.drawImage(srcImg,0,0);
-};
-srcImg.src = {{ fileUrl|safe }};
+    cnvsLoad();
 </script>
 {% endif %}
+
+<form action="{{ url_for('main.doPerspect') }}" method="POST">
+
+     {{ doPerspectForm.coord.label }}
+     {{ doPerspectForm.coord(id='srcImageXY') }}
+     {{ doPerspectForm.hidden_tag() }}
+     {{ doPerspectForm.submit }}
+</form>
 
 
 <footer>
