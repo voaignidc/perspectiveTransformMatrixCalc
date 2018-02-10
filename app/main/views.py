@@ -56,8 +56,10 @@ def doPerspect():
     if doPerspectForm.validate_on_submit():
         print('run perspect')
         print(doPerspectForm.srcImgCoord.data)
+        print(doPerspectForm.dstImgCoord.data)
     return render_template('index.html', uploadForm=uploadForm,
                            doPerspectForm=doPerspectForm, fileUrl=repr(session.get('fileUrl')))
+
 
 @main.route('/tutorial')
 def tutorial():

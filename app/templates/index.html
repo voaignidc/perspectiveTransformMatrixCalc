@@ -22,6 +22,10 @@
             rstImageC.setAttribute("width", srcImg.naturalWidth);
             rstImageC.setAttribute("height", srcImg.naturalHeight);
             srcImageCxt.drawImage(srcImg,0,0);
+            cnvsDraw("srcImageCanvas");
+            cnvsDraw("dstImageCanvas");
+            //cnvsClick(event, "srcImageCanvas", 'srcImgCoordIndex', 'srcImgCoordInput');
+            //cnvsClick(event, "dstImageCanvas", 'dstImgCoordIndex', 'dstImgCoordInput');
         };
         srcImg.src = {{ fileUrl|safe }};
     }
@@ -30,9 +34,17 @@
     {
         var imageC = document.getElementById(cnvsId);
         var imageCxt = imageC.getContext("2d");
-        var img = new Image();
-        img.src = {{ fileUrl|safe }};
-        imageCxt.drawImage(img,0,0);
+        if(cnvsId === "srcImageCanvas")
+        {
+            var img = new Image();
+            img.src = {{ fileUrl|safe }};
+            imageCxt.drawImage(img, 0, 0);
+        }
+        else if(cnvsId === "dstImageCanvas")
+        {
+            imageCxt.fillStyle="#000000";
+            imageCxt.fillRect(0, 0, imageCxt.canvas.width, imageCxt.canvas.height);
+        }
     }
 </script>
 </head>
@@ -63,14 +75,14 @@
 
     <canvas id="srcImageCanvas" width="188" height="120"
             onmousemove="cnvsMouseMove(event, this.id, 'srcImgCoordShow')"
-            onclick="cnvsClick(event, this.id, 'srcImgCoord'), cnvsReload(this.id), cnvsDraw(event, this.id)">
+            onclick="cnvsClick(event, this.id, 'srcImgCoordIndex', 'srcImgCoordInput'), cnvsReload(this.id), cnvsDraw(this.id)">
     你的浏览器不支持canvas,请换用firefox或chrome.
     </canvas>
 
     <p id="srcImgCoordShow"></p>
 
     <span>当前选中第</span>
-    <select name="srcImgCoordIndex">
+    <select id="srcImgCoordIndex">
         <option>0</option>
         <option>1</option>
         <option>2</option>
@@ -82,14 +94,15 @@
     目标图像:
     <br/>
     <canvas id="dstImageCanvas" width="188" height="120"
-            onmousemove="cnvsMouseMove(event, this.id, 'dstImgCoordShow')">
+            onmousemove="cnvsMouseMove(event, this.id, 'dstImgCoordShow')"
+            onclick="cnvsClick(event, this.id, 'dstImgCoordIndex', 'dstImgCoordInput'), cnvsReload(this.id), cnvsDraw(this.id)">
     你的浏览器不支持canvas,请换用firefox或chrome.
     </canvas>
 
     <p id="dstImgCoordShow"></p>
 
     <span>当前选中第</span>
-    <select name="dstImgCoordIndex">
+    <select id="dstImgCoordIndex">
         <option>0</option>
         <option>1</option>
         <option>2</option>
@@ -103,13 +116,13 @@
         {{ doPerspectForm.hidden_tag() }}
         {{ doPerspectForm.srcImgCoord.label }}
         <span>&nbsp;&nbsp;</span>
-        {{ doPerspectForm.srcImgCoord(id='srcImgCoord', size=30) }}
+        {{ doPerspectForm.srcImgCoord(id='srcImgCoordInput', size=50) }}
         {% for error in doPerspectForm.srcImgCoord.errors %}
             <span style="color: red;">{{ error }}</span>
         {% endfor %}
         <br/>
         {{ doPerspectForm.dstImgCoord.label }}
-        {{ doPerspectForm.dstImgCoord(id='dstImgCoord', size=30) }}
+        {{ doPerspectForm.dstImgCoord(id='dstImgCoordInput', size=50) }}
         {% for error in doPerspectForm.dstImgCoord.errors %}
             <span style="color: red;">{{ error }}</span>
         {% endfor %}
