@@ -4,7 +4,8 @@ from flask import Flask, render_template, session, redirect, url_for, flash
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
-from wtforms import SubmitField
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
 
 from . import main
 from .fileManage import getExtName
@@ -18,6 +19,7 @@ class UploadForm(FlaskForm):
     submit = SubmitField(u'上传')
 
 class DoPerspectForm(FlaskForm):
+    name = StringField(u'坐标:')
     submit = SubmitField(u'运行透视变换')
 
 @main.route('/', methods=['GET', 'POST'])
@@ -52,6 +54,7 @@ def doPerspect():
 
     if doPerspectForm.validate_on_submit():
         print('run perspect')
+        print(doPerspectForm.name)
     return render_template('index.html', uploadForm=uploadForm,
                            doPerspectForm=doPerspectForm, fileUrl=repr(session.get('fileUrl')))
 

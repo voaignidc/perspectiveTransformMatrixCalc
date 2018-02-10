@@ -34,7 +34,12 @@
 你的浏览器不支持canvas,请换用firefox或chrome.
 </canvas>
 
-<p id="srcImageXY"></p>
+<!p style="float:right" id="srcImageXY"><!/p>
+
+<form action="{{ url_for('main.doPerspect') }}" method="POST">
+    {{ doPerspectForm.name.label }}
+    {{ doPerspectForm.name(id='srcImageXY') }}
+</form>
 
 <hr/>
 目标图像:
