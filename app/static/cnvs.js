@@ -18,6 +18,8 @@ function cnvsMouseMove(e, cnvsId, textId)
     document.getElementById(textId).innerHTML="鼠标滑过的坐标:("+x+", "+y+")";
 }
 
+var srcImgX = new Array();
+var srcImgY = new Array();
 function cnvsClick(e, cnvsId, textId)
 {
     var canvas=document.getElementById(cnvsId);

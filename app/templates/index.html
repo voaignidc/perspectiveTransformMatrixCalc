@@ -10,6 +10,7 @@
         var srcImageC = document.getElementById("srcImageCanvas");
         var dstImageC = document.getElementById("dstImageCanvas");
         var rstImageC = document.getElementById("rstImageCanvas");
+
         var srcImageCxt = srcImageC.getContext("2d");
         var srcImg = new Image();
         srcImg.onload = function()
@@ -38,86 +39,100 @@
 
 <body>
 <header>
-<h1>透视变换矩阵计算</h1>
+    <h1>透视变换矩阵计算</h1>
 </header>
 
 <nav>
-<a href="/">运行</a>
-<br/>
-<a href="tutorial">教程</a>
-<br/>
+    <a href="/">运行</a>
+    <br/>
+    <a href="tutorial">教程</a>
+    <br/>
 </nav>
 
 <section>
-上传原图像:
-<br/>
-<form action="{{ url_for('main.upload') }}" method="POST" enctype="multipart/form-data">
-    {{ uploadForm.hidden_tag() }}
-    {{ uploadForm.photo }}
-    {% for error in uploadForm.photo.errors %}
-        <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-    {{ uploadForm.submit }}
-</form>
+    上传原图像:
+    <br/>
+    <form action="{{ url_for('main.upload') }}" method="POST" enctype="multipart/form-data">
+        {{ uploadForm.hidden_tag() }}
+        {{ uploadForm.photo }}
+        {% for error in uploadForm.photo.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+        {{ uploadForm.submit }}
+    </form>
 
-<canvas id="srcImageCanvas" width="188" height="120"
-        onmousemove="cnvsMouseMove(event, this.id, 'srcImageXYShow')"
-        onclick="cnvsClick(event, this.id, 'srcImageXY'), cnvsReload(this.id), cnvsDraw(event, this.id)">
-你的浏览器不支持canvas,请换用firefox或chrome.
-</canvas>
+    <canvas id="srcImageCanvas" width="188" height="120"
+            onmousemove="cnvsMouseMove(event, this.id, 'srcImgCoordShow')"
+            onclick="cnvsClick(event, this.id, 'srcImgCoord'), cnvsReload(this.id), cnvsDraw(event, this.id)">
+    你的浏览器不支持canvas,请换用firefox或chrome.
+    </canvas>
 
-<p id="srcImageXYShow"></p>
+    <p id="srcImgCoordShow"></p>
 
-<span>当前选中第</span>
-<select name="srcImgCoordIndex">
-    <option>0</option>
-    <option>1</option>
-    <option>2</option>
-    <option>3</option>
-</select>
-<span>个坐标</span>
+    <span>当前选中第</span>
+    <select name="srcImgCoordIndex">
+        <option>0</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+    </select>
+    <span>个坐标</span>
 
-<hr/>
-目标图像:
-<br/>
-<canvas id="dstImageCanvas" width="188" height="120">
-你的浏览器不支持canvas,请换用firefox或chrome.
-</canvas>
+    <hr/>
+    目标图像:
+    <br/>
+    <canvas id="dstImageCanvas" width="188" height="120"
+            onmousemove="cnvsMouseMove(event, this.id, 'dstImgCoordShow')">
+    你的浏览器不支持canvas,请换用firefox或chrome.
+    </canvas>
 
-<hr/>
-目标图像结果:
-<br/>
-<canvas id="rstImageCanvas" width="188" height="120">
-你的浏览器不支持canvas,请换用firefox或chrome.
-</canvas>
+    <p id="dstImgCoordShow"></p>
+
+    <span>当前选中第</span>
+    <select name="dstImgCoordIndex">
+        <option>0</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+    </select>
+    <span>个坐标</span>
+</section>
+
+<section>
+    <form action="{{ url_for('main.doPerspect') }}" method="POST">
+        {{ doPerspectForm.hidden_tag() }}
+        {{ doPerspectForm.srcImgCoord.label }}
+        <span>&nbsp;&nbsp;</span>
+        {{ doPerspectForm.srcImgCoord(id='srcImgCoord', size=30) }}
+        {% for error in doPerspectForm.srcImgCoord.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+        <br/>
+        {{ doPerspectForm.dstImgCoord.label }}
+        {{ doPerspectForm.dstImgCoord(id='dstImgCoord', size=30) }}
+        {% for error in doPerspectForm.dstImgCoord.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+        <br/>
+        {{ doPerspectForm.submit }}
+    </form>
+
+    <hr/>
+    目标图像结果:
+    <br/>
+    <canvas id="rstImageCanvas" width="188" height="120">
+    你的浏览器不支持canvas,请换用firefox或chrome.
+    </canvas>
 </section>
 
 {% if fileUrl %}
-<script>
-    cnvsLoad();
-</script>
+    <script>
+        cnvsLoad();
+    </script>
 {% endif %}
 
-<form action="{{ url_for('main.doPerspect') }}" method="POST">
-    {{ doPerspectForm.hidden_tag() }}
-    {{ doPerspectForm.srcImgCoord.label }}
-    {{ doPerspectForm.srcImgCoord(id='srcImageXY') }}
-    {% for error in doPerspectForm.srcImgCoord.errors %}
-        <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-    <br/>
-    {{ doPerspectForm.dstImgCoord.label }}
-    {{ doPerspectForm.dstImgCoord(id='dstImageXY') }}
-    {% for error in doPerspectForm.dstImgCoord.errors %}
-        <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-    <br/>
-    {{ doPerspectForm.submit }}
-</form>
-
-
 <footer>
-墨羽VGC
+    <a href="https://github.com/voaignidc" target="_blank">墨羽VGC</a>
 </footer>
 
 </body>
