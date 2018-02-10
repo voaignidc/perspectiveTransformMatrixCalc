@@ -22,6 +22,8 @@
             rstImageC.setAttribute("width", srcImg.naturalWidth);
             rstImageC.setAttribute("height", srcImg.naturalHeight);
             srcImageCxt.drawImage(srcImg,0,0);
+            getXY('srcImgCoordInput');
+            getXY('dstImgCoordInput');
             cnvsDraw("srcImageCanvas");
             cnvsDraw("dstImageCanvas");
             //cnvsClick(event, "srcImageCanvas", 'srcImgCoordIndex', 'srcImgCoordInput');

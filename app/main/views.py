@@ -5,7 +5,7 @@ from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_cl
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Regexp
 
 from . import main
 from .fileManage import getExtName
@@ -19,8 +19,16 @@ class UploadForm(FlaskForm):
     submit = SubmitField(u'上传')
 
 class DoPerspectForm(FlaskForm):
-    srcImgCoord = StringField(u'选定的原图像坐标:',validators=[DataRequired(message=u"坐标不能为空")])
-    dstImgCoord = StringField(u'选定的目标图像坐标:',validators=[DataRequired(message=u"坐标不能为空")])
+    srcImgCoord = StringField(u'选定的原图像坐标:',validators=[DataRequired(message=u"坐标不能为空"),
+                                                       Regexp(r'^\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*\;\s*'+
+                                                              r'\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*\;\s*'+
+                                                              r'\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*\;\s*'+
+                                                              r'\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*$', flags=0, message=u"输入不合法")])
+    dstImgCoord = StringField(u'选定的目标图像坐标:',validators=[DataRequired(message=u"坐标不能为空"),
+                                                       Regexp(r'^\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*\;\s*'+
+                                                              r'\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*\;\s*'+
+                                                              r'\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*\;\s*'+
+                                                              r'\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*$', flags=0, message=u"输入不合法")])
     submit = SubmitField(u'运行透视变换')
 
 @main.route('/', methods=['GET', 'POST'])

@@ -21,10 +21,32 @@ var srcImgY = new Array(0,0,119,119);
 var dstImgX = new Array(0,187,0,187);
 var dstImgY = new Array(0,0,119,119);
 
-function setCookie()
+function getXY(inputId)
 {
-
-
+    var rawStr = document.getElementById(inputId).value;
+    var pattern = /\(/g;
+    var noBracketStr = rawStr.replace(pattern, "");
+    pattern = /\)/g;
+    noBracketStr = noBracketStr.replace(pattern, "");
+    pattern = /\s/g;
+    var noBracketNoSpaceStr = noBracketStr.replace(pattern, "");
+    if(inputId === "srcImgCoordInput")
+    {
+        for (var i = 0; i < 4; i++)
+        {
+            srcImgX[i] = parseInt(noBracketNoSpaceStr.split(";")[i].split(",")[0]);
+            srcImgY[i] = parseInt(noBracketNoSpaceStr.split(";")[i].split(",")[1]);
+            console.log(srcImgY[i]);
+        }
+    }
+    else if(inputId === "dstImgCoordInput")
+    {
+        for (var i = 0; i < 4; i++)
+        {
+            dstImgX[i] = parseInt(noBracketNoSpaceStr.split(";")[i].split(",")[0]);
+            dstImgY[i] = parseInt(noBracketNoSpaceStr.split(";")[i].split(",")[1]);
+        }
+    }
 }
 
 function cnvsClick(e, cnvsId, selectId, inputId)
@@ -40,18 +62,18 @@ function cnvsClick(e, cnvsId, selectId, inputId)
     {
         srcImgX[index]=x;
         srcImgY[index]=y;
-        text="("+srcImgX[0]+", "+srcImgY[0]+"), " +
-            "("+srcImgX[1]+", "+srcImgY[1]+"), " +
-            "("+srcImgX[2]+", "+srcImgY[2]+"), " +
+        text="("+srcImgX[0]+", "+srcImgY[0]+"); " +
+            "("+srcImgX[1]+", "+srcImgY[1]+"); " +
+            "("+srcImgX[2]+", "+srcImgY[2]+"); " +
             "("+srcImgX[3]+", "+srcImgY[3]+")";
     }
     else if(cnvsId === "dstImageCanvas")
     {
         dstImgX[index]=x;
         dstImgY[index]=y;
-        text="("+dstImgX[0]+", "+dstImgY[0]+"), " +
-            "("+dstImgX[1]+", "+dstImgY[1]+"), " +
-            "("+dstImgX[2]+", "+dstImgY[2]+"), " +
+        text="("+dstImgX[0]+", "+dstImgY[0]+"); " +
+            "("+dstImgX[1]+", "+dstImgY[1]+"); " +
+            "("+dstImgX[2]+", "+dstImgY[2]+"); " +
             "("+dstImgX[3]+", "+dstImgY[3]+")";
 
     }
