@@ -26,7 +26,7 @@ def coordInputToPoint(rawStr):
         points[i] = int(s)
         i = i+1
     points = points.reshape(4,2)
-    print(points)
+    # print(points)
     return points
 
 
@@ -38,8 +38,28 @@ def getMatrix(srcImgPoints, dstImgPoints):
     """
     transMat = cv2.getPerspectiveTransform(srcImgPoints, dstImgPoints).T
     invMat = np.linalg.inv(transMat)
-    print('矩阵invMat=\n',invMat,'\n')
-    return invMat
+    cTypeStr = invMatStrTocTypeStr(invMat)
+    return cTypeStr
+
+def invMatStrTocTypeStr(invMat):
+    """把np.float32行驶的数组字符串 格式化成 c语言二维数组形式字符串"""
+    cTypeStr="{\n"
+    count = 1
+    for i in invMat:
+        cTypeStr = cTypeStr +"{"
+        for j in i:
+            cTypeStr = cTypeStr + str('%.5f'%j)
+            if count%3 == 0:
+                cTypeStr = cTypeStr + "}"
+                if count == 9:
+                    cTypeStr = cTypeStr + "\n"
+                else:
+                    cTypeStr = cTypeStr + ",\n"
+            else:
+                cTypeStr = cTypeStr + ","
+            count = count + 1
+    cTypeStr = cTypeStr + "};"
+    return cTypeStr
 
 def savePerspectImg():
     pass

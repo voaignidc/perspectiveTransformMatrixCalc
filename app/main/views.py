@@ -62,10 +62,14 @@ def doPerspect():
     uploadForm = UploadForm()
     doPerspectForm = DoPerspectForm()
 
+    cTypeStr = ""
     if doPerspectForm.validate_on_submit():
-        getMatrix(coordInputToPoint(doPerspectForm.srcImgCoord.data), coordInputToPoint(doPerspectForm.dstImgCoord.data))
+        cTypeStr = getMatrix(coordInputToPoint(doPerspectForm.srcImgCoord.data),
+                             coordInputToPoint(doPerspectForm.dstImgCoord.data))
+        # print(cTypeStr)
     return render_template('index.html', uploadForm=uploadForm,
-                            doPerspectForm=doPerspectForm, fileUrl=repr(session.get('fileUrl')))
+                            doPerspectForm=doPerspectForm, fileUrl=repr(session.get('fileUrl')),
+                           cTypeStr = cTypeStr)
 
 @main.route('/tutorial')
 def tutorial():
