@@ -9,6 +9,7 @@ from wtforms.validators import DataRequired, Regexp
 
 from . import main
 from .fileManage import getExtName
+from .perspect import coordInputToPoint, getMatrix
 
 photos = UploadSet('photos', IMAGES)
 class UploadForm(FlaskForm):
@@ -47,8 +48,6 @@ def upload():
     if uploadForm.validate_on_submit():
         # extName = getExtName(uploadForm.photo.data.filename)
         # uploadForm.photo.data.filename = 'src_userInput' + extName
-
-
         fileName = photos.save(uploadForm.photo.data)
         fileUrl = photos.url(fileName)
         session['fileUrl'] = fileUrl
@@ -64,9 +63,7 @@ def doPerspect():
     doPerspectForm = DoPerspectForm()
 
     if doPerspectForm.validate_on_submit():
-        print('run perspect')
-        print(doPerspectForm.srcImgCoord.data)
-        print(doPerspectForm.dstImgCoord.data)
+        getMatrix(coordInputToPoint(doPerspectForm.srcImgCoord.data), coordInputToPoint(doPerspectForm.dstImgCoord.data))
     return render_template('index.html', uploadForm=uploadForm,
                             doPerspectForm=doPerspectForm, fileUrl=repr(session.get('fileUrl')))
 
