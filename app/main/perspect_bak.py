@@ -157,7 +157,9 @@ class IMAGES(object):
                                  [srcimg_color_obj.mouse_x[1],srcimg_color_obj.mouse_y[1]],
                                  [srcimg_color_obj.mouse_x[2],srcimg_color_obj.mouse_y[2]],
                                  [srcimg_color_obj.mouse_x[3],srcimg_color_obj.mouse_y[3]]]) 
-            
+
+            print(src_p)
+
             dst_p = np.float32([[dstimg_color_obj.mouse_x[0],dstimg_color_obj.mouse_y[0]],
                                  [dstimg_color_obj.mouse_x[1],dstimg_color_obj.mouse_y[1]],
                                  [dstimg_color_obj.mouse_x[2],dstimg_color_obj.mouse_y[2]],
@@ -196,11 +198,11 @@ print('逆透视变换求解逆矩阵程序v1.1')
 
 print('作者:郑默语')
 
-print('是否有原图像?只能是灰度或二值图像(若有,放在./_images文件夹里!)\n若有按y 没有按n')
+print('是否有原图像?只能是灰度或二值图像(若有,放在./images文件夹里!)\n若有按y 没有按n')
 src_flag = input()
 if src_flag == 'y':
     print('输入原图像文件名:(比如123.BMP)')
-    fn = os.getcwd() + '\\_images\\'+ input()
+    fn = os.getcwd() + '\\images\\'+ input()
     print('原图像文件位于:'+fn)
 else:
     print('输入原图像宽:(比如80)')
@@ -208,7 +210,7 @@ else:
     print('输入原图像高:(比如60)')
     input_h = int(input())
     src_img = np.zeros((input_h,input_w), np.uint8)
-    fn = os.getcwd() + r'\_images\src_standard.bmp'
+    fn = os.getcwd() + r'\images\src_standard.bmp'
     cv2.imwrite(fn, src_img)
     print('生成纯黑原图像文件位于:' + fn)
       
@@ -219,7 +221,7 @@ input_w = int(input())
 print('输入目标图像高:(比如60)')
 input_h = int(input())
 dst_img = np.zeros((input_h,input_w), np.uint8)
-fn2 = os.getcwd() + r'\_images\dst_standard.bmp'
+fn2 = os.getcwd() + r'\images\dst_standard.bmp'
 cv2.imwrite(fn2, dst_img)
 print('生成纯黑目标图像文件位于:' + fn2)
 
