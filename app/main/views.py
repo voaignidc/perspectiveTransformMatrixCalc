@@ -8,8 +8,8 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, Regexp
 
 from . import main
-from .fileManage import getExtName
-from .perspect import coordInputToPoint, getMatrix
+from .fileManage import findImgFiles, deleteImgFiles
+from .perspect import coordInputToPoint, getMatrix, doPerspectTransform, invMatTocTypeStr
 
 photos = UploadSet('photos', IMAGES)
 class UploadForm(FlaskForm):
@@ -48,9 +48,16 @@ def upload():
     if uploadForm.validate_on_submit():
         # extName = getExtName(uploadForm.photo.data.filename)
         # uploadForm.photo.data.filename = 'src_userInput' + extName
+
+        localImgFiles = findImgFiles("./app/static/images")
+        for f in localImgFiles:
+            deleteImgFiles("./app/static/images/" + f)
+
         fileName = photos.save(uploadForm.photo.data)
         fileUrl = photos.url(fileName)
         session['fileUrl'] = fileUrl
+
+
     else:
         fileUrl = None
 
@@ -63,13 +70,21 @@ def doPerspect():
     doPerspectForm = DoPerspectForm()
 
     cTypeStr = ""
+    rstImgUrl = ""
     if doPerspectForm.validate_on_submit():
-        cTypeStr = getMatrix(coordInputToPoint(doPerspectForm.srcImgCoord.data),
+        transMat, invMat = getMatrix(coordInputToPoint(doPerspectForm.srcImgCoord.data),
                              coordInputToPoint(doPerspectForm.dstImgCoord.data))
-        # print(cTypeStr)
+        cTypeStr = invMatTocTypeStr(invMat)
+
+        localImgFiles = findImgFiles("./app/static/images")
+        if localImgFiles:
+            rstImgUrl = doPerspectTransform("./app/static/images/" + localImgFiles[0], transMat)
+            print(rstImgUrl)
+
     return render_template('index.html', uploadForm=uploadForm,
                             doPerspectForm=doPerspectForm, fileUrl=repr(session.get('fileUrl')),
-                           cTypeStr = cTypeStr)
+                           cTypeStr = cTypeStr, rstImgUrl=rstImgUrl)
+
 
 @main.route('/tutorial')
 def tutorial():

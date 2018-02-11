@@ -1,9 +1,13 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import re
+import time
 import numpy as np
 import cv2
 
+from .fileManage import getExtName
+
+ISOTIMEFORMAT = '%Y_%m_%d_%H_%M_%S'
 """
 公式:
 src_img   =  dst_img  *  inv_mat_reperspect
@@ -36,12 +40,11 @@ def getMatrix(srcImgPoints, dstImgPoints):
     srcImgPoints 原图中选取的4个点
     dstImgPoints 目标中选取的4个点
     """
-    transMat = cv2.getPerspectiveTransform(srcImgPoints, dstImgPoints).T
-    invMat = np.linalg.inv(transMat)
-    cTypeStr = invMatStrTocTypeStr(invMat)
-    return cTypeStr
+    transMat = cv2.getPerspectiveTransform(srcImgPoints, dstImgPoints)
+    invMat = np.linalg.inv(transMat.T)
+    return transMat, invMat
 
-def invMatStrTocTypeStr(invMat):
+def invMatTocTypeStr(invMat):
     """把np.float32行驶的数组字符串 格式化成 c语言二维数组形式字符串"""
     cTypeStr="{\n"
     count = 1
@@ -61,7 +64,17 @@ def invMatStrTocTypeStr(invMat):
     cTypeStr = cTypeStr + "};"
     return cTypeStr
 
-def savePerspectImg():
-    pass
+def doPerspectTransform(filePath, transMat):
+    """做透视变换"""
+    extName = getExtName(filePath)
+    img = cv2.imread(filePath)
+    rows, cols, channels = img.shape
+    rstImg = cv2.warpPerspective(img, transMat, (cols, rows))
+    now_time = time.strftime(ISOTIMEFORMAT, time.localtime()) # 时间随机数防止浏览器缓存
+    fileName = "rstImg" + now_time + extName
+    fullFileName = "./app/static/images/" + fileName
+    cv2.imwrite(fullFileName, rstImg)
+    return fileName
+
 
 

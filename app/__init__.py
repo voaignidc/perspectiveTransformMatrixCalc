@@ -4,9 +4,9 @@ from flask import Flask
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 
 def createApp(config):
-    app = Flask(__name__)   
+    app = Flask(__name__)
     app.config['SECRET_KEY'] = config.SECRET_KEY
-    app.config['UPLOADED_PHOTOS_DEST'] = config.ROOT_PATH + '/app/images' # 图像上传到的路径
+    app.config['UPLOADED_PHOTOS_DEST'] = config.ROOT_PATH + '/app/static/images' # 图像上传到的路径
     
     photos = UploadSet('photos', IMAGES)
     configure_uploads(app, photos)

@@ -23,15 +23,15 @@ function initCoordInputAsCnvsWH(cnvsId, inputId) {
     var imageC = document.getElementById(cnvsId);
     var imageCxt = imageC.getContext("2d");
 
-    srcImgCoord_X[1] = imageCxt.canvas.width;
-    srcImgCoord_X[3] = imageCxt.canvas.width;
-    srcImgCoord_Y[2] = imageCxt.canvas.height;
-    srcImgCoord_Y[3] = imageCxt.canvas.height;
+    srcImgCoord_X[1] = imageCxt.canvas.width-1;
+    srcImgCoord_X[3] = imageCxt.canvas.width-1;
+    srcImgCoord_Y[2] = imageCxt.canvas.height-1;
+    srcImgCoord_Y[3] = imageCxt.canvas.height-1;
 
-    dstImgCoord_X[1] = imageCxt.canvas.width;
-    dstImgCoord_X[3] = imageCxt.canvas.width;
-    dstImgCoord_Y[2] = imageCxt.canvas.height;
-    dstImgCoord_Y[3] = imageCxt.canvas.height;
+    dstImgCoord_X[1] = imageCxt.canvas.width-1;
+    dstImgCoord_X[3] = imageCxt.canvas.width-1;
+    dstImgCoord_Y[2] = imageCxt.canvas.height-1;
+    dstImgCoord_Y[3] = imageCxt.canvas.height-1;
 
     if(inputId === "srcImgCoordInput") {
         text = "(" + srcImgCoord_X[0] + ", " + srcImgCoord_Y[0] + "); " +

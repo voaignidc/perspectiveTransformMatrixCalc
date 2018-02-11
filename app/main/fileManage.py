@@ -5,9 +5,9 @@ import os
 def getExtName(path):
     return os.path.splitext(path)[1]
 
-def findImgFile(path):
+def findImgFiles(path):
     list = os.listdir(path)
-    print(list)
+    return list
 
-def deleteImgFile(path):
-    pass
+def deleteImgFiles(path):
+    os.remove(path)
