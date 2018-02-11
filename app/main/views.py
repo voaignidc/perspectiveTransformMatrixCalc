@@ -19,6 +19,7 @@ class UploadForm(FlaskForm):
     submit = SubmitField(u'上传')
 
 class DoPerspectForm(FlaskForm):
+    """上传坐标并进行透视变换的表单"""
     srcImgCoord = StringField(u'选定的原图像坐标:',validators=[DataRequired(message=u"坐标不能为空"),
                                                        Regexp(r'^\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*\;\s*'+
                                                               r'\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*\;\s*'+
@@ -46,6 +47,8 @@ def upload():
     if uploadForm.validate_on_submit():
         # extName = getExtName(uploadForm.photo.data.filename)
         # uploadForm.photo.data.filename = 'src_userInput' + extName
+
+
         fileName = photos.save(uploadForm.photo.data)
         fileUrl = photos.url(fileName)
         session['fileUrl'] = fileUrl
@@ -53,7 +56,7 @@ def upload():
         fileUrl = None
 
     return render_template('index.html', uploadForm=uploadForm,
-                           doPerspectForm=doPerspectForm, fileUrl=repr(session.get('fileUrl')))
+                            doPerspectForm=doPerspectForm, fileUrl=repr(session.get('fileUrl')))
 
 
 @main.route('/doPerspect', methods=['GET', 'POST'])
@@ -66,7 +69,7 @@ def doPerspect():
         print(doPerspectForm.srcImgCoord.data)
         print(doPerspectForm.dstImgCoord.data)
     return render_template('index.html', uploadForm=uploadForm,
-                           doPerspectForm=doPerspectForm, fileUrl=repr(session.get('fileUrl')))
+                            doPerspectForm=doPerspectForm, fileUrl=repr(session.get('fileUrl')))
 
 
 @main.route('/tutorial')

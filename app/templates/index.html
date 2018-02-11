@@ -5,33 +5,6 @@
 <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='default.css')}}">
 <script type="text/javascript" src="{{url_for('static', filename='cnvs.js')}}"></script>
 <script>
-    function cnvsLoad()
-    {
-        var srcImageC = document.getElementById("srcImageCanvas");
-        var dstImageC = document.getElementById("dstImageCanvas");
-        var rstImageC = document.getElementById("rstImageCanvas");
-
-        var srcImageCxt = srcImageC.getContext("2d");
-        var srcImg = new Image();
-        srcImg.onload = function()
-        {
-            srcImageC.setAttribute("width", srcImg.naturalWidth);
-            srcImageC.setAttribute("height", srcImg.naturalHeight);
-            dstImageC.setAttribute("width", srcImg.naturalWidth);
-            dstImageC.setAttribute("height", srcImg.naturalHeight);
-            rstImageC.setAttribute("width", srcImg.naturalWidth);
-            rstImageC.setAttribute("height", srcImg.naturalHeight);
-            srcImageCxt.drawImage(srcImg,0,0);
-            getXY('srcImgCoordInput');
-            getXY('dstImgCoordInput');
-            cnvsDraw("srcImageCanvas");
-            cnvsDraw("dstImageCanvas");
-            //cnvsClick(event, "srcImageCanvas", 'srcImgCoordIndex', 'srcImgCoordInput');
-            //cnvsClick(event, "dstImageCanvas", 'dstImgCoordIndex', 'dstImgCoordInput');
-        };
-        srcImg.src = {{ fileUrl|safe }};
-    }
-
     function cnvsReload(cnvsId)
     {
         var imageC = document.getElementById(cnvsId);
@@ -72,16 +45,16 @@
         {% for error in uploadForm.photo.errors %}
             <span style="color: red;">{{ error }}</span>
         {% endfor %}
-        {{ uploadForm.submit }}
+        {{ uploadForm.submit(onclick="")}}
     </form>
 
     <canvas id="srcImageCanvas" width="188" height="120"
-            onmousemove="cnvsMouseMove(event, this.id, 'srcImgCoordShow')"
+            onmousemove="cnvsMouseMove(event, this.id, 'srcImgCoordSlideText')"
             onclick="cnvsClick(event, this.id, 'srcImgCoordIndex', 'srcImgCoordInput'), cnvsReload(this.id), cnvsDraw(this.id)">
     你的浏览器不支持canvas,请换用firefox或chrome.
     </canvas>
 
-    <p id="srcImgCoordShow"></p>
+    <p id="srcImgCoordSlideText"></p>
 
     <span>当前选中第</span>
     <select id="srcImgCoordIndex">
@@ -92,16 +65,17 @@
     </select>
     <span>个坐标</span>
 
+
     <hr/>
     目标图像:
     <br/>
     <canvas id="dstImageCanvas" width="188" height="120"
-            onmousemove="cnvsMouseMove(event, this.id, 'dstImgCoordShow')"
+            onmousemove="cnvsMouseMove(event, this.id, 'dstImgCoordSlideText')"
             onclick="cnvsClick(event, this.id, 'dstImgCoordIndex', 'dstImgCoordInput'), cnvsReload(this.id), cnvsDraw(this.id)">
     你的浏览器不支持canvas,请换用firefox或chrome.
     </canvas>
 
-    <p id="dstImgCoordShow"></p>
+    <p id="dstImgCoordSlideText"></p>
 
     <span>当前选中第</span>
     <select id="dstImgCoordIndex">
@@ -142,6 +116,31 @@
 
 {% if fileUrl %}
     <script>
+        function cnvsLoad()
+        {
+            var srcImageC = document.getElementById("srcImageCanvas");
+            var dstImageC = document.getElementById("dstImageCanvas");
+            var rstImageC = document.getElementById("rstImageCanvas");
+
+            var srcImageCxt = srcImageC.getContext("2d");
+            var srcImg = new Image();
+            srcImg.onload = function()
+            {
+                srcImageC.setAttribute("width", srcImg.naturalWidth);
+                srcImageC.setAttribute("height", srcImg.naturalHeight);
+                dstImageC.setAttribute("width", srcImg.naturalWidth);
+                dstImageC.setAttribute("height", srcImg.naturalHeight);
+                rstImageC.setAttribute("width", srcImg.naturalWidth);
+                rstImageC.setAttribute("height", srcImg.naturalHeight);
+                srcImageCxt.drawImage(srcImg,0,0);
+
+                coordInputToCoordXY("srcImgCoordInput");
+                coordInputToCoordXY("dstImgCoordInput");
+                cnvsDraw("srcImageCanvas");
+                cnvsDraw("dstImageCanvas");
+            };
+            srcImg.src = {{ fileUrl|safe }};
+        }
         cnvsLoad();
     </script>
 {% endif %}

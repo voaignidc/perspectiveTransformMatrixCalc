@@ -1,5 +1,4 @@
-function windowToCanvas(canvas, x, y)
-{
+function windowToCanvas(canvas, x, y) {
     var bbox = canvas.getBoundingClientRect();
     return{
         x: x - bbox.left * (canvas.width / bbox.width),
@@ -7,8 +6,7 @@ function windowToCanvas(canvas, x, y)
     };
 }
 
-function cnvsMouseMove(e, cnvsId, textId)
-{
+function cnvsMouseMove(e, cnvsId, textId) {
     var canvas=document.getElementById(cnvsId);
     var loc=windowToCanvas(canvas, e.clientX, e.clientY);
     var x=parseInt(loc.x);
@@ -16,41 +14,68 @@ function cnvsMouseMove(e, cnvsId, textId)
     document.getElementById(textId).innerHTML="鼠标滑过的坐标:("+x+", "+y+")";
 }
 
-var srcImgX = new Array(0,187,0,187);
-var srcImgY = new Array(0,0,119,119);
-var dstImgX = new Array(0,187,0,187);
-var dstImgY = new Array(0,0,119,119);
+var srcImgCoord_X = new Array(0,187,0,187);
+var srcImgCoord_Y = new Array(0,0,119,119);
+var dstImgCoord_X = new Array(0,187,0,187);
+var dstImgCoord_Y = new Array(0,0,119,119);
 
-function getXY(inputId)
-{
+function initCoordInputAsCnvsWH(cnvsId, inputId) {
+    var imageC = document.getElementById(cnvsId);
+    var imageCxt = imageC.getContext("2d");
+
+    srcImgCoord_X[1] = imageCxt.canvas.width;
+    srcImgCoord_X[3] = imageCxt.canvas.width;
+    srcImgCoord_Y[2] = imageCxt.canvas.height;
+    srcImgCoord_Y[3] = imageCxt.canvas.height;
+
+    dstImgCoord_X[1] = imageCxt.canvas.width;
+    dstImgCoord_X[3] = imageCxt.canvas.width;
+    dstImgCoord_Y[2] = imageCxt.canvas.height;
+    dstImgCoord_Y[3] = imageCxt.canvas.height;
+
+    if(inputId === "srcImgCoordInput") {
+        text = "(" + srcImgCoord_X[0] + ", " + srcImgCoord_Y[0] + "); " +
+            "(" + srcImgCoord_X[1] + ", " + srcImgCoord_Y[1] + "); " +
+            "(" + srcImgCoord_X[2] + ", " + srcImgCoord_Y[2] + "); " +
+            "(" + srcImgCoord_X[3] + ", " + srcImgCoord_Y[3] + ")";
+    }
+    else {
+        text = "(" + dstImgCoord_X[0] + ", " + dstImgCoord_Y[0] + "); " +
+            "(" + dstImgCoord_X[1] + ", " + dstImgCoord_Y[1] + "); " +
+            "(" + dstImgCoord_X[2] + ", " + dstImgCoord_Y[2] + "); " +
+            "(" + dstImgCoord_X[3] + ", " + dstImgCoord_Y[3] + ")";
+    }
+    document.getElementById(inputId).value=text;
+}
+
+function coordInputToCoordXY(inputId) {
     var rawStr = document.getElementById(inputId).value;
+    if(rawStr === "") {
+        initCoordInputAsCnvsWH("srcImageCanvas", "srcImgCoordInput");
+        initCoordInputAsCnvsWH("dstImageCanvas", "dstImgCoordInput");
+    }
     var pattern = /\(/g;
     var noBracketStr = rawStr.replace(pattern, "");
     pattern = /\)/g;
     noBracketStr = noBracketStr.replace(pattern, "");
     pattern = /\s/g;
     var noBracketNoSpaceStr = noBracketStr.replace(pattern, "");
-    if(inputId === "srcImgCoordInput")
-    {
-        for (var i = 0; i < 4; i++)
-        {
-            srcImgX[i] = parseInt(noBracketNoSpaceStr.split(";")[i].split(",")[0]);
-            srcImgY[i] = parseInt(noBracketNoSpaceStr.split(";")[i].split(",")[1]);
-            console.log(srcImgY[i]);
+    var i = 0;
+    if(inputId === "srcImgCoordInput") {
+        for (i = 0; i < 4; i++) {
+            srcImgCoord_X[i] = parseInt(noBracketNoSpaceStr.split(";")[i].split(",")[0]);
+            srcImgCoord_Y[i] = parseInt(noBracketNoSpaceStr.split(";")[i].split(",")[1]);
         }
     }
-    else if(inputId === "dstImgCoordInput")
-    {
-        for (var i = 0; i < 4; i++)
-        {
-            dstImgX[i] = parseInt(noBracketNoSpaceStr.split(";")[i].split(",")[0]);
-            dstImgY[i] = parseInt(noBracketNoSpaceStr.split(";")[i].split(",")[1]);
+    else if(inputId === "dstImgCoordInput") {
+        for (i = 0; i < 4; i++) {
+            dstImgCoord_X[i] = parseInt(noBracketNoSpaceStr.split(";")[i].split(",")[0]);
+            dstImgCoord_Y[i] = parseInt(noBracketNoSpaceStr.split(";")[i].split(",")[1]);
         }
     }
 }
 
-function cnvsClick(e, cnvsId, selectId, inputId)
-{
+function cnvsClick(e, cnvsId, selectId, inputId) {
     var canvas=document.getElementById(cnvsId);
     var loc=windowToCanvas(canvas, e.clientX, e.clientY);
     var x=parseInt(loc.x);
@@ -58,30 +83,27 @@ function cnvsClick(e, cnvsId, selectId, inputId)
     var select=document.getElementById(selectId);
     var index=select.selectedIndex ;
     var text="";
-    if(cnvsId === "srcImageCanvas")
-    {
-        srcImgX[index]=x;
-        srcImgY[index]=y;
-        text="("+srcImgX[0]+", "+srcImgY[0]+"); " +
-            "("+srcImgX[1]+", "+srcImgY[1]+"); " +
-            "("+srcImgX[2]+", "+srcImgY[2]+"); " +
-            "("+srcImgX[3]+", "+srcImgY[3]+")";
+    if(cnvsId === "srcImageCanvas") {
+        srcImgCoord_X[index]=x;
+        srcImgCoord_Y[index]=y;
+        text="("+srcImgCoord_X[0]+", "+srcImgCoord_Y[0]+"); " +
+            "("+srcImgCoord_X[1]+", "+srcImgCoord_Y[1]+"); " +
+            "("+srcImgCoord_X[2]+", "+srcImgCoord_Y[2]+"); " +
+            "("+srcImgCoord_X[3]+", "+srcImgCoord_Y[3]+")";
     }
-    else if(cnvsId === "dstImageCanvas")
-    {
-        dstImgX[index]=x;
-        dstImgY[index]=y;
-        text="("+dstImgX[0]+", "+dstImgY[0]+"); " +
-            "("+dstImgX[1]+", "+dstImgY[1]+"); " +
-            "("+dstImgX[2]+", "+dstImgY[2]+"); " +
-            "("+dstImgX[3]+", "+dstImgY[3]+")";
+    else if(cnvsId === "dstImageCanvas") {
+        dstImgCoord_X[index]=x;
+        dstImgCoord_Y[index]=y;
+        text="("+dstImgCoord_X[0]+", "+dstImgCoord_Y[0]+"); " +
+            "("+dstImgCoord_X[1]+", "+dstImgCoord_Y[1]+"); " +
+            "("+dstImgCoord_X[2]+", "+dstImgCoord_Y[2]+"); " +
+            "("+dstImgCoord_X[3]+", "+dstImgCoord_Y[3]+")";
 
     }
     document.getElementById(inputId).value=text;
 }
 
-function cxtDrawCircleX(canvas, x, y)
-{
+function cxtDrawCircleX(canvas, x, y) {
     var cxt=canvas.getContext("2d");
     cxt.strokeStyle="#ff0000";
 
@@ -103,25 +125,16 @@ function cxtDrawCircleX(canvas, x, y)
     cxt.stroke();
 }
 
-function cnvsDraw(cnvsId)
-{
+function cnvsDraw(cnvsId) {
     var canvas=document.getElementById(cnvsId);
-    if(cnvsId === "srcImageCanvas")
-    {
-        for (var k=0; k<4; k++)
-        {
-            cxtDrawCircleX(canvas, srcImgX[k], srcImgY[k]);
+    if(cnvsId === "srcImageCanvas") {
+        for (var k=0; k<4; k++) {
+            cxtDrawCircleX(canvas, srcImgCoord_X[k], srcImgCoord_Y[k]);
         }
     }
-    else if(cnvsId === "dstImageCanvas")
-    {
-        for (var i=0; i<4; i++)
-        {
-            cxtDrawCircleX(canvas, dstImgX[i], dstImgY[i]);
+    else if(cnvsId === "dstImageCanvas") {
+        for (var i=0; i<4; i++) {
+            cxtDrawCircleX(canvas, dstImgCoord_X[i], dstImgCoord_Y[i]);
         }
     }
-
-
-
-
 }
