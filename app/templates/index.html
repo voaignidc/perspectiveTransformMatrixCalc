@@ -108,6 +108,12 @@
             <span style="color: red;">{{ error }}</span>
         {% endfor %}
         <br/>
+        {{ doPerspectForm.rstImgSize.label }}
+        {{ doPerspectForm.rstImgSize(id='rstImgSizeInput', size=30) }}
+        {% for error in doPerspectForm.rstImgSize.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+        <br/>
         {{ doPerspectForm.submit }}
     </form>
 
@@ -164,6 +170,8 @@
         var rstImg = new Image();
         rstImg.onload = function()
         {
+            rstImageC.setAttribute("width", rstImg.naturalWidth);
+            rstImageC.setAttribute("height", rstImg.naturalHeight);
             rstImageCxt.drawImage(rstImg,0,0);
         };
         rstImg.src = "{{url_for('static', filename='images/'+ rstImgUrl|safe )}}"

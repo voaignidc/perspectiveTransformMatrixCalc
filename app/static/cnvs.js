@@ -23,6 +23,7 @@ function initCoordInputAsCnvsWH(cnvsId, inputId) {
     var imageC = document.getElementById(cnvsId);
     var imageCxt = imageC.getContext("2d");
 
+    var text ="";
     srcImgCoord_X[1] = imageCxt.canvas.width-1;
     srcImgCoord_X[3] = imageCxt.canvas.width-1;
     srcImgCoord_Y[2] = imageCxt.canvas.height-1;
@@ -48,11 +49,23 @@ function initCoordInputAsCnvsWH(cnvsId, inputId) {
     document.getElementById(inputId).value=text;
 }
 
+function initSizeInputAsCnvsWH(cnvsId, inputId) {
+    var imageC = document.getElementById(cnvsId);
+    var imageCxt = imageC.getContext("2d");
+
+    var text ="";
+    var w = imageCxt.canvas.width-1;
+    var h = imageCxt.canvas.height-1;
+    text = "(" + w + ", " + h + ")";
+    document.getElementById(inputId).value=text;
+}
+
 function coordInputToCoordXY(inputId) {
     var rawStr = document.getElementById(inputId).value;
     if(rawStr === "") {
         initCoordInputAsCnvsWH("srcImageCanvas", "srcImgCoordInput");
         initCoordInputAsCnvsWH("dstImageCanvas", "dstImgCoordInput");
+        initSizeInputAsCnvsWH("rstImageCanvas", "rstImgSizeInput");
     }
     var pattern = /\(/g;
     var noBracketStr = rawStr.replace(pattern, "");

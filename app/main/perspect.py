@@ -33,6 +33,17 @@ def coordInputToPoint(rawStr):
     # print(points)
     return points
 
+def sizeInputToPoint(rawStr):
+    noBracketStr = re.sub(r"\(","",rawStr)
+    noBracketStr = re.sub(r"\)","",noBracketStr)
+    noBracketNoSpaceStr = re.sub(r"\s","",noBracketStr)
+    pointsStr = re.split(r"\,", noBracketNoSpaceStr)
+    points = np.float32([0, 0])
+    i = 0
+    for s in pointsStr:
+        points[i] = int(s)
+        i = i+1
+    return points
 
 def getMatrix(srcImgPoints, dstImgPoints):
     """
@@ -64,11 +75,12 @@ def invMatTocTypeStr(invMat):
     cTypeStr = cTypeStr + "};"
     return cTypeStr
 
-def doPerspectTransform(filePath, transMat):
+def doPerspectTransform(filePath, transMat, size):
     """做透视变换"""
     extName = getExtName(filePath)
     img = cv2.imread(filePath)
-    rows, cols, channels = img.shape
+    # rows, cols, channels = img.shape
+    cols,rows = size
     rstImg = cv2.warpPerspective(img, transMat, (cols, rows))
     now_time = time.strftime(ISOTIMEFORMAT, time.localtime()) # 时间随机数防止浏览器缓存
     fileName = "rstImg" + now_time + extName

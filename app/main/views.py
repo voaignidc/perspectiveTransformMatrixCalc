@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-from flask import Flask, render_template, session, redirect, url_for, flash
-from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
+from flask import Flask, render_template, session
+from flask_uploads import UploadSet, IMAGES
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import StringField, SubmitField
@@ -9,7 +9,7 @@ from wtforms.validators import DataRequired, Regexp
 
 from . import main
 from .fileManage import findImgFiles, deleteImgFiles
-from .perspect import coordInputToPoint, getMatrix, doPerspectTransform, invMatTocTypeStr
+from .perspect import coordInputToPoint, getMatrix, doPerspectTransform, invMatTocTypeStr, sizeInputToPoint
 
 photos = UploadSet('photos', IMAGES)
 class UploadForm(FlaskForm):
@@ -22,15 +22,18 @@ class UploadForm(FlaskForm):
 class DoPerspectForm(FlaskForm):
     """上传坐标并进行透视变换的表单"""
     srcImgCoord = StringField(u'选定的原图像坐标:',validators=[DataRequired(message=u"坐标不能为空"),
-                                                       Regexp(r'^\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*\;\s*'+
-                                                              r'\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*\;\s*'+
-                                                              r'\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*\;\s*'+
-                                                              r'\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*$', flags=0, message=u"输入不合法")])
+                                                       Regexp(r'^\s*\(\s*\-?\d+\s*\,\s*\-?\d+\s*\)\s*\;\s*'+
+                                                              r'\s*\(\s*\-?\d+\s*\,\s*\-?\d+\s*\)\s*\;\s*'+
+                                                              r'\s*\(\s*\-?\d+\s*\,\s*\-?\d+\s*\)\s*\;\s*'+
+                                                              r'\s*\(\s*\-?\d+\s*\,\s*\-?\d+\s*\)\s*$', flags=0, message=u"输入不合法")])
     dstImgCoord = StringField(u'选定的目标图像坐标:',validators=[DataRequired(message=u"坐标不能为空"),
-                                                       Regexp(r'^\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*\;\s*'+
-                                                              r'\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*\;\s*'+
-                                                              r'\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*\;\s*'+
-                                                              r'\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*$', flags=0, message=u"输入不合法")])
+                                                       Regexp(r'^\s*\(\s*\-?\d+\s*\,\s*\-?\d+\s*\)\s*\;\s*'+
+                                                              r'\s*\(\s*\-?\d+\s*\,\s*\-?\d+\s*\)\s*\;\s*'+
+                                                              r'\s*\(\s*\-?\d+\s*\,\s*\-?\d+\s*\)\s*\;\s*'+
+                                                              r'\s*\(\s*\-?\d+\s*\,\s*\-?\d+\s*\)\s*$', flags=0, message=u"输入不合法")])
+    rstImgSize = StringField(u'设定目标图像大小(列,行):',validators=[DataRequired(message=u"不能为空"),
+                                                        Regexp(r'^\s*\(\s*\d+\s*\,\s*\d+\s*\)\s*',
+                                                               flags=0,message=u"输入不合法")])
     submit = SubmitField(u'运行透视变换')
 
 @main.route('/', methods=['GET', 'POST'])
@@ -57,7 +60,6 @@ def upload():
         fileUrl = photos.url(fileName)
         session['fileUrl'] = fileUrl
 
-
     else:
         fileUrl = None
 
@@ -75,16 +77,17 @@ def doPerspect():
         transMat, invMat = getMatrix(coordInputToPoint(doPerspectForm.srcImgCoord.data),
                              coordInputToPoint(doPerspectForm.dstImgCoord.data))
         cTypeStr = invMatTocTypeStr(invMat)
+        size = sizeInputToPoint(doPerspectForm.rstImgSize.data)
 
         localImgFiles = findImgFiles("./app/static/images")
         if localImgFiles:
-            rstImgUrl = doPerspectTransform("./app/static/images/" + localImgFiles[0], transMat)
-            print(rstImgUrl)
+
+            rstImgUrl = doPerspectTransform("./app/static/images/" + localImgFiles[0], transMat, size)
+            # print(rstImgUrl)
 
     return render_template('index.html', uploadForm=uploadForm,
                             doPerspectForm=doPerspectForm, fileUrl=repr(session.get('fileUrl')),
                            cTypeStr = cTypeStr, rstImgUrl=rstImgUrl)
-
 
 @main.route('/tutorial')
 def tutorial():
